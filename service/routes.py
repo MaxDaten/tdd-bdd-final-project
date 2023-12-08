@@ -23,7 +23,6 @@ from flask import url_for  # noqa: F401 pylint: disable=unused-import
 from service.models import Product, Category
 from service.common import status  # HTTP Status Codes
 from . import app
-from enum import Enum
 
 
 ######################################################################
@@ -123,13 +122,13 @@ def list_products():
     else:
         app.logger.info("Find all")
         products = Product.all()
-    
     results = [product.serialize() for product in products]
     return results, status.HTTP_200_OK
 
 ######################################################################
 # R E A D   A   P R O D U C T
 ######################################################################
+
 
 @app.route("/products/<int:product_id>", methods=["GET"])
 def get_products(product_id):
@@ -144,7 +143,6 @@ def get_products(product_id):
             status.HTTP_404_NOT_FOUND,
             f"Product with id '{product_id}' was not found."
         )
-    
     return found_product.serialize(), status.HTTP_200_OK
 
 
@@ -166,7 +164,7 @@ def update_products(product_id):
             status.HTTP_404_NOT_FOUND,
             f"Product with id '{product_id}' was not found."
         )
-    
+
     found_product.deserialize(request.get_json())
     found_product.id = product_id
     found_product.update()
@@ -191,4 +189,3 @@ def delete_products(product_id):
         found_product.delete()
 
     return "", status.HTTP_204_NO_CONTENT
-

@@ -186,7 +186,7 @@ class TestProductRoutes(TestCase):
         """It should Update an existing Product"""
         # create a product to update
         test_product = self._create_products(1)[0]
-        
+
         # UPDATE THE PRODUCT
         test_product.description = "unknown"
         response = self.client.put(f"{BASE_URL}/{test_product.id}", json=test_product.serialize())
@@ -201,10 +201,10 @@ class TestProductRoutes(TestCase):
         products = self._create_products(5)
         initial_count = self.get_product_count()
         self.assertEqual(initial_count, 5)
-    
+
         test_product = products[0]
         response = self.client.delete(f"{BASE_URL}/{test_product.id}")
-    
+
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         self.assertEqual(len(response.data), 0)
 
@@ -225,7 +225,7 @@ class TestProductRoutes(TestCase):
         test_name = products[0].name
         same_name_count = len([product for product in products if product.name == test_name])
         response = self.client.get(
-            f"{BASE_URL}", 
+            f"{BASE_URL}",
             query_string=f"name={quote_plus(test_name)}"
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -233,7 +233,7 @@ class TestProductRoutes(TestCase):
         self.assertEqual(len(found), same_name_count)
         for product in found:
             self.assertEqual(product["name"], test_name)
-    
+
     def test_query_by_category(self):
         """It should Query Products by category"""
         products = self._create_products(10)
@@ -243,11 +243,11 @@ class TestProductRoutes(TestCase):
         count_of_products_with_same_category = len(products_with_same_category)
 
         response = self.client.get(
-            f"{BASE_URL}", 
+            f"{BASE_URL}",
             query_string=f"category={category.name}"
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        
+
         found = response.get_json()
         self.assertEqual(len(found), count_of_products_with_same_category)
         for product in found:
@@ -261,11 +261,11 @@ class TestProductRoutes(TestCase):
         count_available_products = len(available_products)
 
         response = self.client.get(
-            f"{BASE_URL}", 
-            query_string=f"available=true"
+            f"{BASE_URL}",
+            query_string="available=true"
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        
+
         found = response.get_json()
         self.assertEqual(len(found), count_available_products)
         for product in found:
